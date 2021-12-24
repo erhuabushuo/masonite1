@@ -22,6 +22,7 @@ class TestNewCommand(unittest.TestCase):
     test_project_dir = os.path.join(os.getcwd(), "new_project")
 
     def setUp(self):
+        self.skipTest("require Pusher keys")
         self.application = Application()
         self.application.add(NewCommand())
         self.command = self.application.find("new")

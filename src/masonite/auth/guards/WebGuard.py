@@ -4,7 +4,7 @@ import bcrypt
 
 from ...app import App
 from ...request import Request
-from ...drivers import AuthCookieDriver, AuthJwtDriver
+from ...drivers import AuthCookieDriver, AuthJwtDriver, AuthTokenDriver
 from ...helpers import config
 from ...helpers import password as bcrypt_password
 from .AuthenticationGuard import AuthenticationGuard
@@ -12,7 +12,7 @@ from .AuthenticationGuard import AuthenticationGuard
 
 class WebGuard(AuthenticationGuard):
 
-    drivers = {"cookie": AuthCookieDriver, "jwt": AuthJwtDriver}
+    drivers = {"cookie": AuthCookieDriver, "jwt": AuthJwtDriver, "token": AuthTokenDriver}
 
     def __init__(self, app: App, driver=None, auth_model=None):
         self.app = app
