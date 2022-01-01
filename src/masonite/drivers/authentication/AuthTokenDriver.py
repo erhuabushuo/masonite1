@@ -1,13 +1,13 @@
-"""AuthHeaderDriver Module."""
+"""AuthTokenDriver Module."""
 
 from ...contracts import AuthContract
 from ...drivers import BaseDriver
 from ...app import App
 
 
-class AuthHeaderDriver(BaseDriver, AuthContract):
+class AuthTokenDriver(BaseDriver, AuthContract):
     def __init__(self, app: App):
-        """AuthHeaderDriver initializer.
+        """AuthTokenDriver initializer.
 
         Arguments:
             request {masonite.request.Request} -- The Masonite request class.
@@ -24,9 +24,16 @@ class AuthHeaderDriver(BaseDriver, AuthContract):
             Model|bool
         """
         request = self.app.make("Request")
-        token = request.header("Authorization").split(" ")[1]
+        authorization = request.header("Authorization")
+        if authorization:
+            token = authorization.split(" ")[1]
+        elif self.app.make("Request").get_cookie("token"):
+            token = self.app.make("Request").get_cookie("token")
+        else:
+            token = None
 
-        if token and auth_model:
+        if token is not None and auth_model:
+            
             return (
                 auth_model.where(
                     "remember_token", token
@@ -36,7 +43,7 @@ class AuthHeaderDriver(BaseDriver, AuthContract):
 
         return False
 
-    def save(self, *args, **kwargs):
+    def save(self, remember_token, **_):
         """Saves the cookie to some state.
 
         In this case the state is saving to a cookie.
@@ -47,7 +54,7 @@ class AuthHeaderDriver(BaseDriver, AuthContract):
         Returns:
             bool
         """
-        return True
+        return self.app.make("Request").cookie("token", remember_token)
 
     def delete(self):
         """Deletes the state depending on the implementation of this driver.
@@ -55,7 +62,7 @@ class AuthHeaderDriver(BaseDriver, AuthContract):
         Returns:
             bool
         """
-        return True
+        return self.app.make("Request").delete_cookie("token")
 
     def logout(self):
         """Deletes the state depending on the implementation of this driver.

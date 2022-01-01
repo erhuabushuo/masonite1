@@ -3,6 +3,7 @@ from .mail.BaseMailDriver import BaseMailDriver
 from .mail.Mailable import Mailable
 from .authentication.AuthCookieDriver import AuthCookieDriver
 from .authentication.AuthJwtDriver import AuthJwtDriver
+from .authentication.AuthTokenDriver import AuthTokenDriver
 from .upload.BaseUploadDriver import BaseUploadDriver
 from .queue.BaseQueueDriver import BaseQueueDriver
 from .cache.BaseCacheDriver import BaseCacheDriver
